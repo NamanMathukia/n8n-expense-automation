@@ -1,0 +1,92 @@
+{
+  "name": "Simulated Transaction Generator",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Every 1 Minute",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3413334c-6d71-49db-94f2-826e919ff771"
+    },
+    {
+      "parameters": {
+        "table": "transactions_raw",
+        "columns": "=message",
+        "additionalFields": {}
+      },
+      "name": "Insert into DB",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [
+        448,
+        0
+      ],
+      "id": "12502e08-70ba-4ad3-9c66-d3fe036c51b6",
+      "credentials": {
+        "postgres": {
+          "id": "0FnbB8Ar1b35DqLj",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const merchants = [\n  \"ZOMATO\",\n  \"SWIGGY\",\n  \"AMAZON\",\n  \"FLIPKART\",\n  \"UBER\",\n  \"IRCTC\",\n  \"NETFLIX\"\n];\n\nconst merchant = merchants[Math.floor(Math.random() * merchants.length)];\nconst amount = (Math.floor(Math.random() * 2000) + 50).toFixed(2);\n\nconst message = `Transaction Alert: INR ${amount} spent at ${merchant}`;\n\nreturn [\n  {\n    json: {\n      message: message\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        0
+      ],
+      "id": "5b14b72f-3604-4aca-8029-665a4e305d75",
+      "name": "Generate fake transaction"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Every 1 Minute": {
+      "main": [
+        [
+          {
+            "node": "Generate fake transaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert into DB": {
+      "main": [
+        []
+      ]
+    },
+    "Generate fake transaction": {
+      "main": [
+        [
+          {
+            "node": "Insert into DB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "3f8a6ffe-5dbc-4b63-b9c6-b30fdfbb7a6b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "0f375d2c46d7d7ee554f8abd19ef7e1ce3abb0a56858970c0bdf86d91ade2d28"
+  },
+  "id": "7ox68i8062WVM0hbmu_pN",
+  "tags": []
+}
