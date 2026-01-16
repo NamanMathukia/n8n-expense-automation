@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:15
     container_name: n8n_postgres
-    restart: always
+    restart: no
     environment:
       POSTGRES_USER: n8n
       POSTGRES_PASSWORD: n8npass
@@ -17,7 +17,7 @@ services:
   n8n:
     image: n8nio/n8n
     container_name: n8n_app
-    restart: always
+    restart: no
     ports:
       - "5678:5678"
     environment:
